@@ -2,7 +2,7 @@ package com.f1bet.service;
 
 import com.f1bet.controller.request.PlaceBetRequest;
 import com.f1bet.controller.response.PlaceBetResponse;
-import com.f1bet.integration.OpenF1Client;
+import com.f1bet.integration.F1APIClient;
 import com.f1bet.integration.OpenF1SessionResult;
 import com.f1bet.mapper.BetMapper;
 import com.f1bet.model.Bet;
@@ -26,14 +26,14 @@ public class BetService {
 
     private final BetRepository betRepository;
     private final UserRepository userRepository;
-    private final OpenF1Client openF1Client;
+    private final F1APIClient f1APIClient;
     private final BetMapper betMapper;
 
     @Autowired
-    public BetService(BetRepository betRepository, UserRepository userRepository, OpenF1Client openF1Client, BetMapper betMapper) {
+    public BetService(BetRepository betRepository, UserRepository userRepository, F1APIClient f1APIClient, BetMapper betMapper) {
         this.betRepository = betRepository;
         this.userRepository = userRepository;
-        this.openF1Client = openF1Client;
+        this.f1APIClient = f1APIClient;
         this.betMapper = betMapper;
     }
 
@@ -45,7 +45,7 @@ public class BetService {
 
         int sessionKey = Integer.parseInt(request.eventId());
 
-        List<OpenF1SessionResult> sessionResults = openF1Client.getSessionResults(sessionKey);
+        List<OpenF1SessionResult> sessionResults = f1APIClient.getSessionResults(sessionKey);
         if (sessionResults == null || sessionResults.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Event not found for session key: " + sessionKey);
         }

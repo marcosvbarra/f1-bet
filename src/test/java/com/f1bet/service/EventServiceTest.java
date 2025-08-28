@@ -1,6 +1,6 @@
 package com.f1bet.service;
 
-import com.f1bet.integration.OpenF1Client;
+import com.f1bet.integration.F1APIClient;
 import com.f1bet.controller.response.DriverResponse;
 import com.f1bet.controller.response.EventResponse;
 import com.f1bet.mapper.EventMapper;
@@ -22,13 +22,13 @@ import static org.mockito.Mockito.when;
 class EventServiceTest {
 
 
-    private OpenF1Client client;
+    private F1APIClient client;
     private EventService service;
     private EventMapper eventMapper;
 
     @BeforeEach
     void setup() {
-        client = Mockito.mock(OpenF1Client.class);
+        client = Mockito.mock(F1APIClient.class);
         service = new EventService(client,eventMapper);
     }
 

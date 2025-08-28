@@ -6,7 +6,7 @@ import com.f1bet.model.Event;
 import java.util.Collections;
 import java.util.List;
 
-public interface OpenF1Client {
+public interface F1APIClient {
 
     List<Event> getSessions(String sessionType, Integer year, String country);
 

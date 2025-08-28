@@ -2,7 +2,7 @@ package com.f1bet.service;
 
 import com.f1bet.controller.request.PlaceBetRequest;
 import com.f1bet.controller.response.PlaceBetResponse;
-import com.f1bet.integration.OpenF1Client;
+import com.f1bet.integration.F1APIClient;
 import com.f1bet.integration.OpenF1SessionResult;
 import com.f1bet.mapper.BetMapper;
 import com.f1bet.model.Bet;
@@ -29,7 +29,7 @@ class BetServiceTest {
 
     private BetRepository betRepository;
     private UserRepository userRepository;
-    private OpenF1Client openF1Client;
+    private F1APIClient f1APIClient;
     private BetService betService;
     private BetMapper betMapper;
 
@@ -37,8 +37,8 @@ class BetServiceTest {
     void setUp() {
         betRepository = Mockito.mock(BetRepository.class);
         userRepository = Mockito.mock(UserRepository.class);
-        openF1Client = Mockito.mock(OpenF1Client.class);
-        betService = new BetService(betRepository, userRepository, openF1Client, betMapper);
+        f1APIClient = Mockito.mock(F1APIClient.class);
+        betService = new BetService(betRepository, userRepository, f1APIClient, betMapper);
     }
 
     @Test
@@ -56,7 +56,7 @@ class BetServiceTest {
             return b;
         });
 
-        when(openF1Client.getSessionResults(7782)).thenReturn(List.of(new OpenF1SessionResult(7782, 44, null)));
+        when(f1APIClient.getSessionResults(7782)).thenReturn(List.of(new OpenF1SessionResult(7782, 44, null)));
         PlaceBetRequest request = new PlaceBetRequest(userId, "7782", 44, BigDecimal.valueOf(25.0));
 
         PlaceBetResponse response = betService.placeBet(request);
@@ -99,7 +99,7 @@ class BetServiceTest {
         user.setBalance(BigDecimal.valueOf(5.0));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        when(openF1Client.getSessionResults(1)).thenReturn(List.of(new OpenF1SessionResult(1, 1, null)));
+        when(f1APIClient.getSessionResults(1)).thenReturn(List.of(new OpenF1SessionResult(1, 1, null)));
         PlaceBetRequest request = new PlaceBetRequest(userId, "1", 1, BigDecimal.valueOf(10.0));
 
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> betService.placeBet(request));
@@ -119,7 +119,7 @@ class BetServiceTest {
         user.setBalance(BigDecimal.valueOf(100));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        when(openF1Client.getSessionResults(1234)).thenReturn(List.of());
+        when(f1APIClient.getSessionResults(1234)).thenReturn(List.of());
 
         PlaceBetRequest request = new PlaceBetRequest(userId, "1234", 44, BigDecimal.TEN);
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> betService.placeBet(request));
@@ -137,7 +137,7 @@ class BetServiceTest {
         user.setBalance(BigDecimal.valueOf(100));
         when(userRepository.findById(userId)).thenReturn(Optional.of(user));
 
-        when(openF1Client.getSessionResults(5000)).thenReturn(List.of(new OpenF1SessionResult(5000, 99, 999)));
+        when(f1APIClient.getSessionResults(5000)).thenReturn(List.of(new OpenF1SessionResult(5000, 99, 999)));
 
         PlaceBetRequest request = new PlaceBetRequest(userId, "5000", 44, BigDecimal.TEN);
         ResponseStatusException ex = assertThrows(ResponseStatusException.class, () -> betService.placeBet(request));

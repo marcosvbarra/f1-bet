@@ -1,7 +1,7 @@
 package com.f1bet.service;
 
 import com.f1bet.controller.response.EventResponse;
-import com.f1bet.integration.OpenF1Client;
+import com.f1bet.integration.F1APIClient;
 import com.f1bet.mapper.EventMapper;
 import com.f1bet.model.Event;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 @Service
 public class EventService {
 
-    private final OpenF1Client openF1Client;
+    private final F1APIClient f1APIClient;
     private final EventMapper eventMapper;
 
     @Autowired
-    public EventService(OpenF1Client openF1Client, EventMapper eventMapper) {
-        this.openF1Client = openF1Client;
+    public EventService(F1APIClient f1APIClient, EventMapper eventMapper) {
+        this.f1APIClient = f1APIClient;
         this.eventMapper = eventMapper;
     }
 
@@ -27,7 +27,7 @@ public class EventService {
         int safeSize = Math.max(1, Math.min(30, size));
         int safePage = Math.max(0, page);
 
-        List<Event> sessions = openF1Client.getSessions(sessionType, year, country);
+        List<Event> sessions = f1APIClient.getSessions(sessionType, year, country);
         if (sessions == null || sessions.isEmpty()) {
             return Collections.emptyList();
         }
@@ -41,7 +41,7 @@ public class EventService {
         pageItems.forEach(session -> {
             boolean needsFetch = session.getDriverMarket() == null || session.getDriverMarket().isEmpty();
             if (needsFetch && session.getSessionKey() != null) {
-                session.setDriverMarket(openF1Client.getDriversForSession(session.getSessionKey()));
+                session.setDriverMarket(f1APIClient.getDriversForSession(session.getSessionKey()));
             }
         });
 

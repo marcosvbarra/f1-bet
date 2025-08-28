@@ -20,7 +20,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 @Component
-public class OpenF1ClientImpl implements OpenF1Client {
+public class OpenF1ClientImpl implements F1APIClient {
 
     private final RestTemplate restTemplate = new RestTemplate();
     private final String openF1BaseUrl = "https://api.openf1.org/v1";
