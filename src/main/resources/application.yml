@@ -1,0 +1,19 @@
+spring:
+  h2:
+    console:
+      enabled: true
+  sql.init.mode: always
+  datasource:
+    url: jdbc:h2:mem:f1db
+    username: sa
+    password: password
+  jpa:
+    defer-datasource-initialization: true
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+    properties:
+      hibernate:
+        default_schema: public
+
